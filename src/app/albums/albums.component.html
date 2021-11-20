@@ -1,0 +1,53 @@
+<div class="container-fuild principal">
+  <div class="row content">
+    
+    <div class="col-sm-4 video">
+         <!-- L'enfant search est appelé ici -->
+        <app-search  (searchAlbums)="search($event)"></app-search>
+      <!-- L'enfant AlbumDetails est appelé ici, il reçois la propriété du parent [album] -->
+      <app-album-details [album]="selectedAlbum" (onPlay)="playParent($event)"></app-album-details>
+      <mat-progress-bar mode="query"></mat-progress-bar>
+    </div>
+      <div class="col-sm-8 music">
+        <h1>{{ titlePage }}</h1>
+       <!-- .pagination -->
+       <app-paginate (setPaginate)="paginate($event)"></app-paginate>
+       <!-- Pagination -->   
+      <!-- Card -->
+      <!-- Ici la directive ngFor permet de boucle sur les albums dans la balise parent -->  
+      <div class="card" *ngFor="let album of albums">
+        <div class="card-header">
+          Pop
+      <!-- Ici si album.id  est égalé à status j'affiche play dans pop -->
+          <span *ngIf="album.id === status">[play]</span>
+        </div>
+        <div class="card-body">
+            <a class="text-info" routerLink="/album/{{album.id}}">{{album.title}}</a>
+          <p class="card-text">{{album.description}}</p>
+      <!-- condition vérifiez si il y a des tags présent dans un album si ce n'est pas le cas la directive ne crée pas l'élément HTML dans le Component -->
+          <ul *ngIf="album.tags" class="list-inline">
+            <li class="list-inline-item" *ngFor="let tag of album.tags">
+              <span class="badge bg-info">{{ tag }}</span>
+            </li>
+          </ul>
+          <a class="btn btn-outline-dark" href="#" role="button">en</a>
+      <!-- ng-template fonctionne de la même manière que ngIf permert de gérer un if plus complexe voir doc Angular -->
+          <ng-template [ngIf]="album.like">
+            <img class="glyph-icon" src="./assets/svg/si-glyph-heart.png" />
+            <small>{{ album.like }}</small>
+          </ng-template>
+          <ng-template [ngIf]="album.duration">
+            <img class="glyph-icon" src="./assets/svg/si-glyph-timer.png" />
+            <small>{{album.duration}} min</small>
+          </ng-template>
+          <!-- afficher les détails de l'album au click -->
+          <button (click)="onSelect(album)" class="btn btn-dark">Details</button>
+        </div>
+      </div>
+      <!-- .card -->
+          <!-- .pagination -->
+          <app-paginate (setPaginate)="paginate($event)"></app-paginate>
+          <!-- Pagination -->
+      </div><!-- .music -->
+  </div>
+</div>
